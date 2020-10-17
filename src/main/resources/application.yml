@@ -1,0 +1,47 @@
+server:
+  port: 8888
+
+#jwt
+jwt:
+  header: Authorization
+  # 令牌前缀
+  token-start-with: Bearer
+  # 使用Base64对该令牌进行编码
+  base64-secret: absesdfasdfa
+  # 令牌过期时间 此处单位/毫秒
+  token-validity-in-seconds: 14400000
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # 遇到相同名字时，是否允许覆盖注册
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #  默认静态资源文件路径
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      #驼峰下划线转换
+      column-underline: true
+      #逻辑删除配置
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      db-type: mysql
+    refresh: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.demo.pojo
+
+logging:
+  config: classpath:log/logback-spring.xml
+  path: D:/nmyslog/nmys
