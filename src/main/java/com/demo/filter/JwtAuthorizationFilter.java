@@ -60,10 +60,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 从Token中解密获取用户角色
         String role = JwtTokenUtils.getRoleFromToken(token);
         // 将[ROLE_XXX,ROLE_YYY]格式的角色字符串转换为数组
-        String[] roles = StrUtil.strip(role, "[]").split(", ");
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (String s : roles) {
-            authorities.add(new SimpleGrantedAuthority(s));
+        if (StrUtil.isNotBlank(role) && role != "[]") {
+            String[] roles = StrUtil.strip(role, "[]").split(", ");
+            for (String s : roles) {
+                authorities.add(new SimpleGrantedAuthority(s));
+            }
         }
         if (username != null) {
             return new UsernamePasswordAuthenticationToken(username, null, authorities);

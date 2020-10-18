@@ -1,15 +1,17 @@
 package com.demo.util;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.RandomUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.security.Key;
 import java.util.*;
 
 /**
@@ -43,7 +45,7 @@ public class JwtTokenUtils implements Serializable {
     /**
      * 密钥
      */
-    private static final String SECRET = "abcdefgh/abcd/authorities**/abcdefgh/abcd/authorities**/abcdefgh/abcd/authorities**/abcdefgh/abcd/authorities**/";
+    private static final String SECRET = "abcdefgh" + RandomUtil.randomString(40);
     /**
      * 有效期12小时
      */
@@ -60,7 +62,7 @@ public class JwtTokenUtils implements Serializable {
         claims.put(USERNAME, SecurityUtils.getUsername(authentication));
         claims.put(CREATED, new Date());
         claims.put(AUTHORITIES, authentication.getAuthorities());
-        return generateToken(claims);
+        return JwtTokenUtils.TOKEN_PREFIX + generateToken(claims);
     }
 
     /**
@@ -71,8 +73,10 @@ public class JwtTokenUtils implements Serializable {
      */
     private static String generateToken(Map<String, Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
-        String secret = Base64.encode(SECRET);
-        return Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        //这里先转码成base64又转回来，0.9.1之后只推荐使用key的形式sign，所以上面那个解密jwt会有Base64.encode(secret)，因为实际上我的加密secret变成了现在的加密后的secret
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+        return Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(key).compact();
     }
 
     /**
@@ -160,7 +164,7 @@ public class JwtTokenUtils implements Serializable {
     private static Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
-            claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+            claims = Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
             claims = null;
         }

@@ -38,8 +38,8 @@ public class Result {
     public static Result success() {
         Result result = new Result();
         result.setSuccess(true);
-        result.setCode(ResultEnum.SUCCESS.getCode());
-        result.setMessage(ResultEnum.SUCCESS.getMessage());
+        result.setCode(ResultEnum.HTTP_SUCCESS.getCode());
+        result.setMessage(ResultEnum.HTTP_SUCCESS.getMessage());
         return result;
     }
 
@@ -57,7 +57,7 @@ public class Result {
     public static Result success(String msg, Object date) {
         Result result = new Result();
         result.setSuccess(true);
-        result.setCode(ResultEnum.SUCCESS.getCode());
+        result.setCode(ResultEnum.HTTP_SUCCESS.getCode());
         result.setMessage(msg);
         result.setData(date);
         return result;

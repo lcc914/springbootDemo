@@ -7,27 +7,59 @@ package com.demo.common.config.security;
  * @author: lcc
  */
 
+import com.demo.common.handler.JwtAccessDeniedHandler;
+import com.demo.common.handler.JwtAuthenticationFailureHandler;
+import com.demo.common.handler.JwtAuthenticationSuccessHandler;
+import com.demo.common.handler.JwtLogoutSuccessHandler;
+import com.demo.filter.JwtAuthLoginFilter;
+import com.demo.filter.JwtAuthorizationFilter;
 import com.demo.service.auth.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * Spring Security配置类
  *
  * @author lcc
  */
+@Configuration
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    //  未登陆时返回 JSON 格式的数据给前端（否则为 html）
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    // 登录成功返回的 JSON 格式数据给前端（否则为 html）
+    @Autowired
+    private JwtAuthenticationSuccessHandler authenticationSuccessHandler;
+    //  登录失败返回的 JSON 格式数据给前端（否则为 html）
+    @Autowired
+    private JwtAuthenticationFailureHandler authenticationFailureHandler;
+
+    // 注销成功返回的 JSON 格式数据给前端（否则为 登录时的 html）
+    @Autowired
+    private JwtLogoutSuccessHandler logoutSuccessHandler;
+    // 无权访问返回的 JSON 格式数据给前端（否则为 403 html 页面）
+    @Autowired
+    private JwtAccessDeniedHandler accessDeniedHandler;
+
 
     /**
      * 密码加密器
@@ -98,46 +130,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        //权限配置
-        httpSecurity
+        // 禁用 csrf, 由于使用的是JWT，我们这里不需要csrf
+        httpSecurity.cors().and().csrf().disable()
                 .authorizeRequests()
-                // 对于登录login 验证码captchaImage 允许匿名访问
-                .antMatchers("/user/login", "api/captchaImage")
-                .anonymous()
-                .antMatchers(
-                        HttpMethod.GET,
-                        //静态资源文件放行
-                        "/*.html",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js",
-                        //swagger-ui  放行
-                        "/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**",
-                        "/swagger-resources/configuration/ui",
-                        "/swagge‌​r-ui.html",
-                        "doc.html"
-                )
-                .permitAll()
+                // 跨域预检请求
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 登录URL
+                .antMatchers("/user/login").permitAll()
+                // swagger
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
+                .antMatchers("/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "static/**").permitAll()
+
+//                .antMatchers("/**").permitAll()
+                // 其他所有请求需要身份认证
                 .anyRequest().authenticated();
-
-        //其他的配置
-        httpSecurity
-                //允许跨域
-                .cors().and().anonymous().and()
-                // CRSF禁用，因为不使用session
-                .csrf().disable()
-                // 认证失败处理类
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                .headers().frameOptions().disable();
+        // 退出登录处理器
+        httpSecurity.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+        // 开启登录认证流程过滤器，如果使用LoginController的login接口, 需要注释掉此过滤器，根据使用习惯二选一即可
+        httpSecurity.addFilterBefore(new JwtAuthLoginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+        // 访问控制时登录状态检查过滤器
+        httpSecurity.addFilterBefore(new JwtAuthorizationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.logout().logoutUrl("/logout");
     }
 
+
+    @Bean
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
 }

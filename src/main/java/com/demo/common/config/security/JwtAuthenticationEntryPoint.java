@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.demo.pojo.vo.Result;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @Author: LiChangChen
  * @Date: 2020/10/18
  */
+@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
     private static final long serialVersionUID = -2789538865497859949L;
 

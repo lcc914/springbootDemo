@@ -10,11 +10,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -31,18 +33,20 @@ public class UserController {
     private AuthenticationManager authenticationManager;
     @Resource
     private UserService userService;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "", notes = "{\n" +
             "  \"username\": \"13866995555\",\n" +
             "  \"password\": \"111111\"\n" +
             "}")
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     @ResponseBody
-    public Result login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
+    public Result login(@RequestBody Map<String, String> user, HttpServletRequest request) {
         // 系统登录认证
         Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.get("username"), user.get("password")));
         } catch (Exception e) {
             return Result.error("登录失败");
         }
@@ -55,8 +59,9 @@ public class UserController {
     @PreAuthorize("permitAll")
     public Result add(@RequestBody User user) {
         // 系统登录认证
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userService.save(user);
         List<User> list = userService.list();
-        System.out.println("do---------------------");
         return Result.success(list);
     }
 
