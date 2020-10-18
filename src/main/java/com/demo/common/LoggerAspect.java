@@ -74,8 +74,8 @@ public class LoggerAspect {
 
         // result的值就是被拦截方法的返回值
         Object result = pjp.proceed();
-        logger.info("请求结束===包名==>{}==方法名==>{}\n返回值:{}", currentMethodPackage, methodName, JSONUtil.toJsonStr(result));
-        return result;
+        logger.info("请求结束===包名==>{}==方法名==>{}\n返回值:{}", currentMethodPackage, methodName, result);
+        return null;
     }
 
 
@@ -97,7 +97,7 @@ public class LoggerAspect {
 
         // result的值就是被拦截方法的返回值
         Object result = joinPoint.proceed();
-        logger.info("包名==>{}==方法名==>{}\n返回值:{}", currentMethodPackage, methodName, JSONUtil.toJsonStr(result));
+        logger.info("包名==>{}==方法名==>{}\n返回值:{}", currentMethodPackage, methodName, result);
         return result;
     }
 

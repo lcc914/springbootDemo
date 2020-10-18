@@ -1,18 +1,16 @@
 package com.demo.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.demo.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * Mapper 接口
+ * 用户 Mapper 接口
  * </p>
  *
  * @author lcc
- * @since 2020-10-11
+ * @since 2020-10-17
  */
-@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }

@@ -7,10 +7,10 @@ package com.demo.common.config.security;
  * @author: lcc
  */
 
-import com.demo.common.config.security.handler.MyAuthFailHandler;
-import com.demo.common.config.security.handler.MyAuthSuccessHandler;
+import com.demo.service.auth.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,8 +21,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.Resource;
-
 /**
  * Spring Security配置类
  *
@@ -30,16 +28,30 @@ import javax.annotation.Resource;
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Resource
-    private MyAuthFailHandler myAuthFailHandler;
-    @Resource
-    private MyAuthSuccessHandler myAuthSuccessHandler;
 
     /**
-     * 自定义用户认证逻辑
+     * 密码加密器
      */
-    @Resource
-    private UserDetailsService userDetailsService;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        /**
+         * BCryptPasswordEncoder：相同的密码明文每次生成的密文都不同，安全性更高
+         */
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
 
     /**
      * 用户认证配置
@@ -49,19 +61,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * 指定用户认证时，默认从哪里获取认证用户信息
          */
-        auth.userDetailsService(userDetailsService)
+        auth.userDetailsService(userDetailsService())
                 //配置加密方式
                 .passwordEncoder(passwordEncoder());
-
-//        //设置缓存数据 不要访问数据库
-//        auth.inMemoryAuthentication()
-//                .withUser("admin")
-//                .password(passwordEncoder().encode("123456"))
-//                .roles("admin")
-//
-//                .and()
-//                //配置加密方式
-//                .passwordEncoder(passwordEncoder());
     }
 
     /**
@@ -74,7 +76,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/configuration/ui",
                 "/swagger-resources",
                 "/swagger-resources/configuration/security",
-                "/swagger-ui.html");
+                "/swagger-ui.html",
+                "static/**");
     }
 
 
@@ -95,28 +98,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        //开启form 模式
-        httpSecurity
-                .formLogin()
-                //未登录跳转的页面
-                .loginPage("/static/login.html")
-                //默认表单提交地址
-                .loginProcessingUrl("/login")
-                //form
-                //登录成功跳转地址
-                .defaultSuccessUrl("/index")
-                //失败跳转地址
-                .failureUrl("/static/login.html")
-
-                //http请求
-                .successHandler(myAuthSuccessHandler)
-                .failureHandler(myAuthFailHandler);
-
         //权限配置
         httpSecurity
                 .authorizeRequests()
                 // 对于登录login 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/captchaImage")
+                .antMatchers("/user/login", "api/captchaImage")
                 .anonymous()
                 .antMatchers(
                         HttpMethod.GET,
@@ -134,8 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**",
                         "/swagger-resources/configuration/ui",
                         "/swagge‌​r-ui.html",
-                        "doc.html",
-                        "/**"
+                        "doc.html"
                 )
                 .permitAll()
                 .anyRequest().authenticated();
@@ -153,20 +138,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .headers().frameOptions().disable();
         httpSecurity.logout().logoutUrl("/logout");
-        // 添加JWT filter
-//        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-
-    /**
-     * 密码加密器
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        /**
-         * BCryptPasswordEncoder：相同的密码明文每次生成的密文都不同，安全性更高
-         */
-        return new BCryptPasswordEncoder();
     }
 
 }

@@ -43,11 +43,39 @@ public class Result {
         return result;
     }
 
+    public static Result success(Object date) {
+        Result result = success();
+        result.setData(date);
+        return result;
+    }
+
+    public static Result success(String msg) {
+        Result result = success(msg, null);
+        return result;
+    }
+
+    public static Result success(String msg, Object date) {
+        Result result = new Result();
+        result.setSuccess(true);
+        result.setCode(ResultEnum.SUCCESS.getCode());
+        result.setMessage(msg);
+        result.setData(date);
+        return result;
+    }
+
     public static Result error() {
         Result result = new Result();
         result.setSuccess(false);
         result.setCode(ResultEnum.HTTP_ERROR_100.getCode());
         result.setMessage(ResultEnum.HTTP_ERROR_100.getMessage());
+        return result;
+    }
+
+    public static Result error(String msg) {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setCode(ResultEnum.HTTP_ERROR_100.getCode());
+        result.setMessage(msg);
         return result;
     }
 

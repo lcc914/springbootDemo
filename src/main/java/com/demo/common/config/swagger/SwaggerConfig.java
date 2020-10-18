@@ -1,4 +1,4 @@
-package com.demo.common.config;
+package com.demo.common.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,7 +77,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private List<ApiKey> securitySchemes() {
         List<ApiKey> objects = new ArrayList<>();
-        objects.add(new ApiKey("accessToken", "accessToken", "header"));
+        objects.add(new ApiKey("Authentication", "Authentication", "header"));
         return objects;
     }
 

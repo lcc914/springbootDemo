@@ -19,7 +19,7 @@ import java.util.Map;
 public class MabatisPlusGenerator {
 
     //生成文件所在项目路径
-    private static String baseProjectPath = "D:\\Code\\MyCode\\springbootDemo";
+    private static String baseProjectPath = "D:\\Code\\MyGit\\springbootDemo";
 
     //项目目录
     private static String srcPath = "main";
@@ -31,7 +31,7 @@ public class MabatisPlusGenerator {
     //作者
     private static String authorName = "lcc";
     //要生成的表名
-    private static String[] tables = {"log_table"};
+    private static String tables = "%";
     //table前缀
     private static String prefix = "";
 
@@ -90,9 +90,9 @@ public class MabatisPlusGenerator {
                         //.setDbColumnUnderline(true)//全局下划线命名
                         .setTablePrefix(new String[]{prefix})// 此处可以修改为您的表前缀
                         .setNaming(NamingStrategy.underline_to_camel)// 表名生成策略
-                        .setInclude(tables) // 需要生成的表
+//                        .setInclude(tables) // 需要生成的表
                         .setRestControllerStyle(true)
-                        //.setExclude(new String[]{"test"}) // 排除生成的表
+                        .setExclude() // 排除生成的表
                         // 自定义实体父类
                         // .setSuperEntityClass("com.baomidou.demo.TestEntity")
                         // 自定义实体，公共字段

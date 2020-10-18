@@ -58,6 +58,7 @@
             <version>0.10.6</version>
         </dependency>
 
+        <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -166,7 +167,12 @@
             <artifactId>hutool-all</artifactId>
             <version>5.1.0</version>
         </dependency>
-
+        <!-- fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.58</version>
+        </dependency>
         <!--quartz -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -195,7 +201,11 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
 
-
+        <!--  thymeleaf-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,30 +1,29 @@
 package com.demo.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.util.Date;
-
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author lcc
- * @since 2020-10-14
+ * @since 2020-10-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("log_table")
-@ApiModel(value = "LogTable对象", description = "")
-public class LogTable extends Model<LogTable> {
+@TableName("log_info")
+@ApiModel(value="LogInfo对象", description="")
+public class LogInfo extends Model<LogInfo> {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,7 +61,7 @@ public class LogTable extends Model<LogTable> {
 
     @Override
     protected Serializable pkVal() {
-        return id;
+        return this.id;
     }
 
 }

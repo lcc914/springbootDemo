@@ -5,13 +5,22 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.demo.pojo.User">
         <id column="id" property="id" />
-        <result column="username" property="username" />
+        <result column="state" property="state" />
+        <result column="name" property="name" />
+        <result column="head_img_url" property="headImgUrl" />
+        <result column="mobile" property="mobile" />
+        <result column="salt" property="salt" />
         <result column="password" property="password" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="edit_time" property="editTime" />
+        <result column="editor" property="editor" />
+        <result column="deleted" property="deleted" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password
+        id, state, name, head_img_url, mobile, salt, password, create_time, creator, edit_time, editor, deleted
     </sql>
 
 </mapper>

@@ -1,7 +1,9 @@
 package com.demo.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author: lcc
  */
-@RestController
-@RequestMapping("/api")
+@Controller
 public class PageController {
 
     /**
@@ -55,19 +56,19 @@ public class PageController {
 
 
     /**
-     * 跳转到home.html页面（不需要登录）
+     * 跳转到index.html页面（不需要登录）
      */
-    @GetMapping("/toHome")
-    public String toHome() {
-        return "home.html";
+    @GetMapping("/index")
+    public String toIndex() {
+        return "index";
     }
 
     /**
-     * 跳转到home.html页面（不需要登录）
+     * 跳转到login.html页面（不需要登录）
      */
-    @GetMapping("/login")
-    public String toIndex() {
-        return "static/login.html";
+    @RequestMapping("/login")
+    public String toLogin() {
+        return "login";
     }
 
 }

@@ -1,6 +1,6 @@
 package com.demo.dao;
 
-import com.demo.pojo.LogTable;
+import com.demo.pojo.LogInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author lcc
- * @since 2020-10-14
+ * @since 2020-10-17
  */
-public interface LogTableMapper extends BaseMapper<LogTable> {
+public interface LogInfoMapper extends BaseMapper<LogInfo> {
 
 }
