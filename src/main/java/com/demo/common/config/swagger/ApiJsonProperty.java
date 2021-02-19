@@ -22,4 +22,6 @@ public @interface ApiJsonProperty {
 
     String description() default "";
 
+    boolean required() default false;
+
 }

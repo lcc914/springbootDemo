@@ -1,6 +1,8 @@
 package com.demo.controller;
 
 
+import com.demo.common.config.swagger.ApiJsonObject;
+import com.demo.common.config.swagger.ApiJsonProperty;
 import com.demo.pojo.User;
 import com.demo.pojo.vo.Result;
 import com.demo.service.UserService;
@@ -42,7 +44,11 @@ public class UserController {
             "}")
     @PostMapping(value = "/login")
     @ResponseBody
-    public Result login(@RequestBody Map<String, String> user, HttpServletRequest request) {
+    public Result login(     @ApiJsonObject(name = "login_model", value = {
+            @ApiJsonProperty(key = "userId", example = "1222221", description = "用户id"),
+            @ApiJsonProperty(key = "articleId", example = "12", description = "文章id"),
+            @ApiJsonProperty(key = "type", example = "1", required = true, description = "type 1.点赞  2.收藏 3 足迹  4 分享")
+    })@RequestBody Map<String, String> user, HttpServletRequest request) {
         // 系统登录认证
         Authentication authentication;
         try {
