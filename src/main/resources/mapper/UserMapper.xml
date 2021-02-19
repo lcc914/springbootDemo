@@ -4,18 +4,18 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.demo.pojo.User">
-        <id column="id" property="id" />
-        <result column="state" property="state" />
-        <result column="name" property="name" />
-        <result column="head_img_url" property="headImgUrl" />
-        <result column="mobile" property="mobile" />
-        <result column="salt" property="salt" />
-        <result column="password" property="password" />
-        <result column="create_time" property="createTime" />
-        <result column="creator" property="creator" />
-        <result column="edit_time" property="editTime" />
-        <result column="editor" property="editor" />
-        <result column="deleted" property="deleted" />
+        <id column="id" property="id"/>
+        <result column="state" property="state"/>
+        <result column="name" property="name"/>
+        <result column="head_img_url" property="headImgUrl"/>
+        <result column="mobile" property="mobile"/>
+        <result column="salt" property="salt"/>
+        <result column="password" property="password"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="edit_time" property="editTime"/>
+        <result column="editor" property="editor"/>
+        <result column="deleted" property="deleted"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

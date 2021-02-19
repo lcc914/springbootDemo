@@ -4,16 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.demo.pojo.UserGroup">
-        <id column="id" property="id" />
-        <result column="parent_id" property="parentId" />
-        <result column="name" property="name" />
-        <result column="code" property="code" />
-        <result column="intro" property="intro" />
-        <result column="create_time" property="createTime" />
-        <result column="creator" property="creator" />
-        <result column="edit_time" property="editTime" />
-        <result column="editor" property="editor" />
-        <result column="deleted" property="deleted" />
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="intro" property="intro"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="edit_time" property="editTime"/>
+        <result column="editor" property="editor"/>
+        <result column="deleted" property="deleted"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

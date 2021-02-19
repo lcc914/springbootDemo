@@ -2,6 +2,7 @@ package com.demo.common.handler;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.demo.emuns.ResultEnum;
+import com.demo.pojo.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class,
             ServletRequestBindingException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class})
-    public R handleHttpMessageNotReadableException(Exception e) {
+    public Result handleHttpMessageNotReadableException(Exception e) {
         e.printStackTrace();
-        return R.failed(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
+        return Result.error(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
     }
 
     /**
@@ -50,9 +51,9 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public R handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public Result handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         e.printStackTrace();
-        return R.failed(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
+        return Result.error(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
     }
 
     /**
@@ -63,17 +64,17 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
-    public R handleException(Throwable e) {
+    public Result handleException(Throwable e) {
         e.printStackTrace();
-        return R.failed(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
+        return Result.error(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
     }
 
     /**
      * E
      */
     @ExceptionHandler(Exception.class)
-    public R allException(Exception e) {
+    public Result allException(Exception e) {
         e.printStackTrace();
-        return R.failed(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
+        return Result.error(ResultEnum.METHOD_NOT_ALLOWED.getMessage());
     }
 }

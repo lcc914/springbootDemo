@@ -3,9 +3,13 @@ package com.demo.pojo;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +26,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("user_group_role")
-@ApiModel(value="UserGroupRole对象", description="用户组角色")
+@ApiModel(value = "UserGroupRole对象", description = "用户组角色")
 public class UserGroupRole extends Model<UserGroupRole> {
 
     private static final long serialVersionUID = 1L;

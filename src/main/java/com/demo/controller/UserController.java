@@ -56,7 +56,7 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    @PreAuthorize("permitAll")
+//    @PreAuthorize("permitAll")
     public Result add(@RequestBody User user) {
         // 系统登录认证
         user.setPassword(passwordEncoder.encode(user.getPassword()));

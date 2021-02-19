@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.demo.job.UploadTask;
 import com.demo.util.ScheduleUtil;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * @Author: LiChangChen
@@ -49,7 +52,7 @@ public class JobController {
     @GetMapping("/createJob2")
     public R createJob2() throws SchedulerException {
         logger.error("test");
-        ScheduleUtil.addJob(scheduler, UploadTask.class, "0/8 * * * * ?");
+        ScheduleUtil.addJob(scheduler, UploadTask.class, DateUtil.format(new Date(System.currentTimeMillis() + 5000), "ss mm HH dd MM ? yyyy"));
         return R.ok("");
     }
 
